@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎉 Happy Birthday!</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      text-align: center;
+      padding: 20px;
+      color: #333;
+    }
+    h1 {
+      font-size: 2.5rem;
+      color: #fff;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px #ff5f6d;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    input, textarea, button {
+      padding: 10px;
+      margin: 5px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+      width: 90%;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    button {
+      background: #ff5f6d;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+      width: auto;
+      border: none;
+    }
+    button:hover {
+      background: #ff2e63;
+    }
+    #successMessage {
+      margin-top: 15px;
+      color: green;
+      font-weight: bold;
+      display: none;
+    }
+
+    /* Floating music control button */
+    #music-control {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #ff5f6d;
+      border: none;
+      border-radius: 50%;
+      width: 65px;
+      height: 65px;
+      cursor: pointer;
+      font-size: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      box-shadow: 0 0 20px rgba(255, 0, 100, 0.7);
+      animation: pulse 1.5s infinite;
+    }
+    #music-control:hover {
+      background: #ff2e63;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 0, 100, 0.7); }
+      50% { transform: scale(1.15); box-shadow: 0 0 35px rgba(255, 50, 120, 1); }
+      100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 0, 100, 0.7); }
+    }
+  </style>
+</head>
+<body>
+  <h1>🎂 Happy Birthday, Prosper! 🎉</h1>
+  <p>Leave your name and birthday wish 💌</p>
+
+  <!-- 🎶 Background Music -->
+  <audio id="bg-music" loop>
+    <source src="https://files.catbox.moe/3gqncq.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <!-- Floating Play/Pause Button -->
+  <button id="music-control">▶️</button>
+
+  <div class="container">
+    <input type="text" id="nameInput" placeholder="Your name..."><br>
+    <textarea id="wishInput" placeholder="Type your birthday wish..."></textarea><br>
+    <button onclick="sendWish()">Send 🎁</button>
+    <div id="successMessage">✅ Thanks, I really appreciate your birthday wish!</div>
+  </div>
+
+  <script>
+    // ✅ Your Telegram bot details
+    const BOT_TOKEN = "8096107981:AAF4QDZy7Lp73VKkHh_aXscCg6GuaLvn6oM";
+    const CHAT_ID = "7865382097";
+
+    function sendWish() {
+      let name = document.getElementById('nameInput').value.trim();
+      let wish = document.getElementById('wishInput').value.trim();
+      let successMsg = document.getElementById('successMessage');
+
+      if (!name || !wish) return;
+
+      // ✅ Send to Telegram
+      let telegramURL = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent("🎂 New Birthday Wish\n\n👤 From: " + name + "\n💌 Wish: " + wish)}`;
+      fetch(telegramURL)
+        .then(() => {
+          successMsg.style.display = "block"; // show thank you message
+          document.getElementById('nameInput').value = "";
+          document.getElementById('wishInput').value = "";
+
+          // ⏳ Hide message after 5 seconds
+          setTimeout(() => {
+            successMsg.style.display = "none";
+          }, 5000);
+        });
+    }
+
+    // 🎶 Music control
+    const music = document.getElementById("bg-music");
+    const controlBtn = document.getElementById("music-control");
+
+    controlBtn.addEventListener("click", () => {
+      if (music.paused) {
+        if (music.currentTime < 15) {
+          music.currentTime = 15; // start at 15 seconds
+        }
+        music.play();
+        controlBtn.textContent = "⏸️"; 
+      } else {
+        music.pause();
+        controlBtn.textContent = "▶️"; 
+      }
+    });
+  </script>
+</body>
+</html>
